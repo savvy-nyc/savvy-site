@@ -1,0 +1,6 @@
+.global-header {
+  background-color: #000;
+  @include breakpoint(desktop) {
+    height: $desktopHeaderHeight;
+  }
+}

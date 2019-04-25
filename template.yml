@@ -1,0 +1,243 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Parameters:
+  Env:
+    Type: String
+  Domain:
+    Type: String
+  StaticDomain:
+    Type: String
+  HostedZoneId:
+    Type: String
+  StaticHostedZoneId:
+    Type: String
+  SSLArn:
+    Type: String
+  LambdaBucketName:
+    Type: String
+  S3ObjectKey:
+    Type: String
+  S3ObjectVersion:
+    Type: String
+  TargetLambdaVersion:
+    Type: String
+Resources:
+  LambdaRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+                - edgelambda.amazonaws.com
+            Action: "sts:AssumeRole"
+      Path: /
+      Policies:
+        - PolicyName: iam
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "lambda:InvokeFunction"
+                  - "lambda:GetFunction"
+                Resource: "*"
+              - Effect: Allow
+                Action:
+                  - "logs:CreateLogGroup"
+                  - "logs:CreateLogStream"
+                  - "logs:PutLogEvents"
+                Resource: "*"
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/AWSLambdaExecute"
+  Lambda:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      Code:
+        S3Bucket: !Ref LambdaBucketName
+        S3Key: !Ref S3ObjectKey
+        S3ObjectVersion: !Ref S3ObjectVersion
+      Description: !Sub "Server-side rendering function for the ${Env} env"
+      Handler: lambda.handler
+      Role: !GetAtt LambdaRole.Arn
+      Runtime: nodejs8.10
+      Timeout: 10
+  InitialLambdaVersion:
+    Type: AWS::Lambda::Version
+    Properties:
+      FunctionName: !GetAtt Lambda.Arn
+  OriginAccessId:
+    Type: "AWS::CloudFront::CloudFrontOriginAccessIdentity"
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: !Sub "${AWS::StackName}-${Env}"
+  SiteBucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      BucketName: !Ref Domain
+      CorsConfiguration:
+        CorsRules:
+          - AllowedMethods:
+              - GET
+            AllowedOrigins:
+              - !Sub "https://${Domain}"
+            MaxAge: 3000
+  StaticBucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      BucketName: !Ref StaticDomain
+      CorsConfiguration:
+        CorsRules:
+          - AllowedMethods:
+              - GET
+            AllowedOrigins:
+              - !Sub "https://${Domain}"
+            MaxAge: 3000
+  SiteBucketPolicy:
+    Type: "AWS::S3::BucketPolicy"
+    Properties:
+      Bucket: !Ref SiteBucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: Grant a CloudFront Origin Identity access to support private content
+            Effect: Allow
+            Principal:
+              CanonicalUser: !GetAtt OriginAccessId.S3CanonicalUserId
+            Action: "s3:GetObject"
+            Resource:
+              - !Sub "arn:aws:s3:::${Domain}/*"
+  StaticBucketPolicy:
+    Type: "AWS::S3::BucketPolicy"
+    Properties:
+      Bucket: !Ref StaticBucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: Grant a CloudFront Origin Identity access to support private content
+            Effect: Allow
+            Principal:
+              CanonicalUser: !GetAtt OriginAccessId.S3CanonicalUserId
+            Action: "s3:GetObject"
+            Resource:
+              - !Sub "arn:aws:s3:::${StaticDomain}/*"
+  SiteDistro:
+    Type: "AWS::CloudFront::Distribution"
+    DependsOn:
+      - SiteBucketPolicy
+      - StaticBucketPolicy
+      - Lambda
+    Properties:
+      DistributionConfig:
+        Aliases:
+          - !Ref Domain
+        ViewerCertificate:
+          AcmCertificateArn: !Ref SSLArn
+          SslSupportMethod: sni-only
+        DefaultRootObject: index.html
+        DefaultCacheBehavior:
+          AllowedMethods:
+            - GET
+            - HEAD
+          CachedMethods:
+            - GET
+            - HEAD
+          Compress: true
+          DefaultTTL: 3600
+          ForwardedValues:
+            Headers:
+              - Origin
+              - CloudFront-Is-Desktop-Viewer
+              - CloudFront-Is-Mobile-Viewer
+            QueryString: true
+            Cookies:
+              Forward: none
+          ViewerProtocolPolicy: redirect-to-https
+          TargetOriginId: site
+          LambdaFunctionAssociations:
+            - EventType: origin-request
+              LambdaFunctionARN: !Join
+                - ":"
+                - - !GetAtt Lambda.Arn
+                  - !Ref TargetLambdaVersion
+        Enabled: true
+        Origins:
+          - DomainName: !GetAtt SiteBucket.DomainName
+            Id: site
+            S3OriginConfig:
+              OriginAccessIdentity: !Sub "origin-access-identity/cloudfront/${OriginAccessId}"
+  StaticDistro:
+    Type: "AWS::CloudFront::Distribution"
+    DependsOn:
+      - StaticBucketPolicy
+      - SiteBucketPolicy
+      - Lambda
+    Properties:
+      DistributionConfig:
+        Aliases:
+          - !Ref StaticDomain
+        ViewerCertificate:
+          AcmCertificateArn: !Ref SSLArn
+          SslSupportMethod: sni-only
+        DefaultRootObject: index.html
+        DefaultCacheBehavior:
+          AllowedMethods:
+            - GET
+            - HEAD
+          CachedMethods:
+            - GET
+            - HEAD
+          Compress: true
+          DefaultTTL: 3600
+          ForwardedValues:
+            Headers:
+              - Origin
+              - Accept-Language
+              - CloudFront-Is-Desktop-Viewer
+              - CloudFront-Is-Mobile-Viewer
+            QueryString: true
+            Cookies:
+              Forward: none
+          ViewerProtocolPolicy: redirect-to-https
+          TargetOriginId: static
+        Enabled: true
+        Origins:
+          - DomainName: !GetAtt StaticBucket.DomainName
+            Id: static
+            S3OriginConfig:
+              OriginAccessIdentity: !Sub "origin-access-identity/cloudfront/${OriginAccessId}"
+  SiteRoute53Record:
+    Type: "AWS::Route53::RecordSet"
+    Properties:
+      AliasTarget:
+        HostedZoneId: Z2FDTNDATAQYW2
+        DNSName: !GetAtt SiteDistro.DomainName
+      Type: A
+      Comment: !Sub "Alias record for ${Domain} to the staging CloudFront distribution"
+      HostedZoneId: !Ref HostedZoneId
+      Name: !Sub "${Domain}."
+    DependsOn: SiteDistro
+  StaticRoute53Record:
+    Type: "AWS::Route53::RecordSet"
+    Properties:
+      AliasTarget:
+        HostedZoneId: Z2FDTNDATAQYW2
+        DNSName: !GetAtt StaticDistro.DomainName
+      Type: A
+      Comment: !Sub "Alias record for ${Domain} to the staging CloudFront distribution"
+      HostedZoneId: !Ref StaticHostedZoneId
+      Name: !Sub "${StaticDomain}."
+    DependsOn: StaticDistro
+Outputs:
+  FunctionName:
+    Description: SSR Lambda function name
+    Value: !Ref Lambda
+    Export:
+      Name: !Sub "lambda-ssr-name-${Env}"
+  SiteDistributionId:
+    Description: Site CloudFront distribution ID
+    Value: !Ref SiteDistro
+    Export:
+      Name: !Sub "cloudfront-id-media-${Env}"

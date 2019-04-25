@@ -1,0 +1,12 @@
+{
+  "name": "coindesk-serverless",
+  "version": "0.0.0",
+  "license": "UNLICENCED",
+  "dependencies": {
+    "@spencerbeggs/next-routes": "^3.3.0",
+    "express": "^4.16.4",
+    "next": "^8.0.3",
+    "react": "^16.8.5",
+    "serverless-http": "github:spencerbeggs/serverless-http.git#master"
+  }
+}

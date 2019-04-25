@@ -1,0 +1,15 @@
+node_modules
+.DS_Store
+.cache
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+.env
+.cache
+public
+.yarn-integrity
+dist
+.pkg
+lib/build-container/.npmrc
+lib/build-container/package.json
+lib/build-container/yarn.lock

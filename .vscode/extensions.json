@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "nhoizey.gremlins",
+    "esbenp.prettier-vscode",
+    "guardrex.status-bar-tasks",
+    "aws-scripting-guy.cform",
+    "redhat.vscode-yaml"
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "PROJECT_NAME": "sri2020",
+  "LAMBDAS_BUCKET": "coindesk-lambdas",
+  "TEMPLATES_BUCKET": "coindesk-cloudformation-templates",
+  "BUILD_IMAGE": "234204114737.dkr.ecr.us-east-1.amazonaws.com/media"
+}

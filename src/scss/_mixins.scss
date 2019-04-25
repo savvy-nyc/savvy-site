@@ -1,0 +1,532 @@
+@mixin borderBox() {
+  box-sizing: border-box;
+  *,
+  > *:before,
+  > *:after {
+    box-sizing: inherit;
+  }
+}
+
+@mixin lightFont() {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+@mixin thin() {
+  font-weight: 300;
+}
+
+@mixin light() {
+  font-weight: 300;
+}
+
+@mixin regular() {
+  font-weight: normal;
+}
+
+@mixin medium() {
+  font-weight: 500;
+}
+
+@mixin bigHeadline() {
+  @include thin();
+  font-size: 50px;
+  line-height: 1.12em;
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+@mixin mediumHeadline() {
+  font-weight: 100;
+  font-weight: lighter;
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+@mixin smallHeadline() {
+  font-weight: 200;
+  font-weight: lighter;
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+@mixin tinyHeadline() {
+  @include thin();
+  font-size: 16px;
+  line-height: 1.25;
+}
+
+@mixin split() {
+  display: flex;
+  justify-content: space-between;
+  > * {
+    &:last-child {
+      align-self: flex-end;
+    }
+  }
+}
+
+@mixin center() {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@mixin arrowUp($width: 5px, $color: #000) {
+  width: 0;
+  height: 0;
+  border-left: $width solid transparent;
+  border-right: $width solid transparent;
+  border-bottom: $width solid $color;
+}
+
+@mixin arrowDown($width: 5px, $color: #000) {
+  width: 0;
+  height: 0;
+  border-left: $width solid transparent;
+  border-right: $width solid transparent;
+  border-top: $width solid $color;
+}
+
+@mixin arrowRight($width: 5px, $color: #000) {
+  width: 0;
+  height: 0;
+  border-top: $width solid transparent;
+  border-bottom: $width solid transparent;
+  border-left: $width solid $color;
+}
+
+@mixin arrowLeft($width: 5px, $color: #000) {
+  width: 0;
+  height: 0;
+  border-top: $width solid transparent;
+  border-bottom: $width solid transparent;
+  border-right: $width solid $color;
+}
+
+@function strip-units($number) {
+  @return $number / ($number * 0 + 1);
+}
+
+@mixin marginRight($margin: 0px) {
+  margin-right: $margin;
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+@mixin marginBottom($margin: 0px) {
+  > * {
+    margin-bottom: $margin;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+@mixin responsiveMarginBottom($mobile: 3vw, $desktop: 20px) {
+  > * {
+    margin-bottom: $mobile;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  @include breakpoint(desktop) {
+    > * {
+      margin-bottom: $desktop;
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+@mixin up() {
+  transform: rotate(0deg);
+}
+
+@mixin right() {
+  transform: rotate(90deg);
+}
+
+@mixin down() {
+  transform: rotate(180deg);
+}
+
+@mixin left() {
+  transform: rotate(-90deg);
+}
+
+@mixin center() {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@mixin clearfix() {
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
+@mixin block($marginRight: 0px) {
+  @include clearfix();
+  > * {
+    float: left;
+    margin-right: $marginRight;
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
+@mixin transitions($props: all, $speed: 2s, $type: null) {
+  transition: $props $speed $type;
+}
+
+@mixin faded($offset, $blur-radius, $spread-radius) {
+  &.faded-left:after {
+    box-shadow: inset $offset 0 $blur-radius (-$spread-radius);
+  }
+
+  &.faded-right:after {
+    box-shadow: inset (-$offset) 0 $blur-radius (-$spread-radius);
+  }
+
+  &.faded-top:after {
+    box-shadow: inset 0 $offset $blur-radius (-$spread-radius);
+  }
+
+  &.faded-bottom:after {
+    box-shadow: inset 0 (-$offset) $blur-radius (-$spread-radius);
+  }
+
+  &.faded-left.faded-right:after {
+    box-shadow: inset $offset 0 $blur-radius (-$spread-radius),
+      inset (-$offset) 0 $blur-radius (-$spread-radius);
+  }
+
+  &.faded-left.faded-top:after {
+    box-shadow: inset $offset ($offset) $blur-radius (-$spread-radius);
+  }
+
+  &.faded-right.faded-bottom:after {
+    box-shadow: inset (-$offset) (-$offset) $blur-radius (-$spread-radius);
+  }
+
+  &.faded-top.faded-right:after {
+    box-shadow: inset (-$offset) $offset $blur-radius (-$spread-radius);
+  }
+
+  &.faded-top.faded-bottom:after {
+    box-shadow: inset 0 $offset $blur-radius (-$spread-radius),
+      inset 0 (-$offset) $blur-radius (-$spread-radius);
+  }
+
+  &.faded-left.faded-bottom:after {
+    box-shadow: inset $offset (-$offset) $blur-radius (-$spread-radius);
+  }
+
+  &.faded-top.faded-right.faded-bottom:after {
+    box-shadow: inset (-$offset/2) 0 $blur-radius $spread-radius;
+  }
+
+  &.faded-left.faded-right.faded-bottom:after {
+    box-shadow: inset 0 (-$offset/2) $blur-radius $spread-radius;
+  }
+
+  &.faded-left.faded-top.faded-bottom:after {
+    box-shadow: inset ($offset/2) 0 $blur-radius $spread-radius;
+  }
+
+  &.faded-left.faded-top.faded-right:after {
+    box-shadow: inset 0 ($offset/2) $blur-radius $spread-radius;
+  }
+
+  &.faded-all:after,
+  &.faded-left.faded-top.faded-right.faded-bottom:after {
+    box-shadow: inset 0 0 $blur-radius $spread-radius;
+  }
+}
+
+@mixin background-2x($path, $ext: "png") {
+  $at1x_path: "#{$path}.#{$ext}";
+  $at2x_path: "#{$path}@2x.#{$ext}";
+
+  background-image: url("#{$at1x_path}");
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+
+  @media all and (-webkit-min-device-pixel-ratio: 1.5),
+    all and (-o-min-device-pixel-ratio: 3/2),
+    all and (min--moz-device-pixel-ratio: 1.5),
+    all and (min-device-pixel-ratio: 1.5) {
+    background-image: url("#{$at2x_path}");
+  }
+}
+
+@mixin svg($svgWidth, $svgHeight, $containerHeight, $scaledSvgHeight: false) {
+  height: $containerHeight;
+  @if $scaledSvgHeight {
+    width: $scaledSvgHeight *
+      (strip-units($svgWidth) / strip-units($svgHeight));
+  } @else {
+    width: calc(
+      $containerHeight * (strip-units($svgWidth) / strip-units($svgHeight))
+    );
+  }
+  svg {
+    @if $scaledSvgHeight {
+      height: $scaledSvgHeight;
+      width: $scaledSvgHeight *
+        (strip-units($svgWidth) / strip-units($svgHeight));
+    } @else {
+      height: $containerHeight;
+      width: calc(
+        $containerHeight * (strip-units($svgWidth) / strip-units($svgHeight))
+      );
+    }
+  }
+}
+
+@mixin scale($originalWidth, $originalHeight, $newWidth) {
+  width: $newWidth;
+  height: calc(
+    #{$newWidth} / (#{strip-units($originalWidth)} / #{strip-units(
+            $originalHeight
+          )})
+  );
+}
+
+@mixin button($bgColor: #000, $textColor: #fff) {
+  font-size: 22px;
+  &:hover {
+    text-decoration: none;
+    > span {
+      background-color: darken($bgColor, 10%);
+    }
+  }
+  > span {
+    transition: background-color 1s;
+    background-color: $bgColor;
+    display: block;
+    color: $textColor;
+    padding-left: 25px;
+    padding-right: 25px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border-radius: 25px;
+  }
+}
+
+@mixin minibutton($bgColor: #000, $textColor: #fff) {
+  font-size: 18px;
+  &:hover {
+    text-decoration: none;
+    > span {
+      background-color: darken($bgColor, 10%);
+    }
+  }
+  > span {
+    transition: background-color 1s;
+    background-color: $bgColor;
+    display: block;
+    font-weight: 600;
+    color: $textColor;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-radius: 10px;
+  }
+}
+
+@mixin rightGutter($width) {
+  margin-right: $width;
+  &:last-child {
+    margin-right: 0;
+  }
+}
+
+@mixin logged-in {
+  body.logged-in & {
+    @content;
+  }
+}
+
+@mixin breakpoint($class) {
+  @if $class == phone {
+    @media (max-width: $desktopSiteWidth - 1) {
+      @content;
+    }
+  } @else if $class == desktop {
+    @media (min-width: $desktopSiteWidth) {
+      @content;
+    }
+  } @else {
+    @warn "Breakpoint mixin supports: phone, tablet, desktop";
+  }
+}
+
+@mixin page() {
+  @include breakpoint(desktop) {
+    min-height: calc(100vh - #{$desktopFooterHeight} - #{$desktopHeaderHeight});
+    @include logged-in {
+      min-height: calc(
+        100vh - #{$desktopFooterHeight} - #{$desktopHeaderHeight} - #{$desktopWpHeaderHeight}
+      );
+    }
+  }
+
+  min-height: calc(100vh - #{$headerHeight} - 150px);
+}
+
+@mixin responsivePadding(
+  $paddingLeftMobile: 3vw,
+  $paddingRightMobile: 3vw,
+  $paddingLeftDektop: 0px,
+  $paddingRightDesktop: 0px
+) {
+  @include breakpoint(desktop) {
+    padding-left: $paddingLeftDektop;
+    padding-right: $paddingRightDesktop;
+  }
+  padding-left: $paddingLeftMobile;
+  padding-right: $paddingRightMobile;
+}
+
+@mixin ie10plus {
+  @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+    /* IE10+ specific styles go here */
+    @content;
+  }
+}
+
+/// Set text sizing
+@mixin text-sizing(
+  $fontSize,
+  $fontWeight,
+  $lineHeight: 1,
+  $letterSpacing: normal
+) {
+  @if ($fontSize) {
+    font-size: $fontSize;
+  }
+  @if ($fontWeight) {
+    font-weight: $fontWeight;
+  }
+
+  line-height: $lineHeight;
+  letter-spacing: $letterSpacing;
+}
+
+/// Set "hollow" text effect
+/// @example scss
+///    @include text-hollow(#fff, #000);
+/// @param {Color} $fillColor [default: null]
+/// @param {Color} $borderColor [default: null]
+@mixin text-border($fillColor, $borderColor) {
+  color: $fillColor;
+  -webkit-text-stroke: 0.5px $borderColor;
+}
+
+/// Set size - width and height
+/// @example scss
+///    @include size(50px, 100px);
+/// @param {String} $width [default: 100%]
+/// @param {String} $height [default: $width]
+@mixin size($width: 100%, $height: $width) {
+  width: $width;
+  height: $height;
+}
+
+/// Set min size - min-width and min-height
+/// @example scss
+///    @include min-size(50px, 100px);
+/// @param {String} $width [default: 100%]
+/// @param {String} $height [default: $width]
+@mixin min-size($width: 100%, $height: $width) {
+  min-width: $width;
+  min-height: $height;
+}
+
+/// Helper to make .btn class scss content
+/// @example scss
+///    @include make-btn(#000, #fff);
+/// @param {String} $backgroundColor [default: null]
+/// @param {String} $textColor [default: null]
+@mixin make-btn($backgroundColor, $textColor) {
+  background-color: $backgroundColor;
+  color: $textColor;
+
+  &:disabled,
+  &.disabled,
+  &.inactive {
+    color: rgba($textColor, 0.5) !important;
+    background-color: $backgroundColor !important;
+    cursor: not-allowed;
+  }
+
+  &:hover {
+    background-color: darken($backgroundColor, 10%);
+  }
+}
+
+/// Set default pseudo elemtn style
+/// @example scss
+///    @include pseudo;
+/// @param {String} $content [default: '']
+/// @param {String} $display [default: block]
+/// @param {String} $position [default: absolute]
+@mixin pseudo($content: "", $display: block, $position: absolute) {
+  content: $content;
+  display: $display;
+  position: $position;
+}
+
+@mixin container() {
+  @include breakpoint(desktop) {
+    width: $desktopSiteWidth;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* DECORATION COMPONENT MIXINS */
+/*
+ * This is a decorative rectangle in card components
+ * It usually is positioned absolute and 
+ * has -x & -y coordinates
+ * This mixins reduces many duplication in styles
+ */
+
+@mixin wh($size) {
+  width: $size;
+  height: $size;
+}
+
+@mixin decorationPosition($squarePosition, $size) {
+  top: -$squarePosition;
+  left: -$squarePosition;
+
+  @include wh($size);
+}
+//TODO rename decoration
+@mixin decoration($color, $squarePosition, $size) {
+  position: absolute;
+  background: $color;
+
+  //TODO rename position
+  @include decorationPosition($squarePosition, $size);
+}
+
+/* END DECORATION COMPONENT MIXINS */
+
+//Mixin for video button inside card components
+@mixin btnCentered($btnSize) {
+  top: calc(50% - (#{btnSize} / 2));
+  left: calc(50% - (#{btnSize} / 2));
+  width: $btnSize;
+  height: $btnSize;
+}

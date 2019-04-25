@@ -1,0 +1,31 @@
+{
+  "yaml.customTags": [
+    "!And",
+    "!If sequence",
+    "!Not",
+    "!Equals",
+    "!Or",
+    "!FindInMap sequence",
+    "!Base64",
+    "!Cidr",
+    "!Ref",
+    "!Sub",
+    "!GetAtt",
+    "!GetAZs",
+    "!ImportValue",
+    "!Select",
+    "!Split",
+    "!Join sequence"
+  ],
+  // Enable/disable default YAML formatter (requires restart)
+  "yaml.format.enable": true,
+  "[yaml]": {
+    "editor.insertSpaces": false
+  },
+  "[handlebars]": {
+    "editor.formatOnSave": false
+  },
+  "terminal.integrated.shellArgs.osx": [],
+  // Set the default
+  "editor.formatOnSave": true
+}

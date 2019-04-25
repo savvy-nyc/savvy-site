@@ -1,0 +1,190 @@
+@mixin text($type, $color: null, $style: null) {
+  // Text colors
+  @if ($color == light) {
+    color: $white;
+    @if ($style == stroke) {
+      @include text-border(transparent, $color_blue-dark);
+    }
+  }
+  @if ($color == dark) {
+    color: $dark;
+    @if ($style == stroke) {
+      @include text-border($dark, $color_white);
+    }
+  }
+
+  // Text sizing
+  @if ($type == heading-0) {
+    @include text-sizing(36px, bold);
+
+    @include breakpoint(desktop) {
+      @include text-sizing(72px, bold);
+    }
+  }
+
+  @if ($type == heading-1) {
+    @include text-sizing(48px, bold, 1.21);
+    // Mobile not included in mocks
+  }
+
+  @if ($type == heading-2) {
+    @include text-sizing(22px, bold, 1.27);
+
+    @include breakpoint(desktop) {
+      @include text-sizing(36px, bold, 1.28);
+    }
+  }
+
+  @if ($type == heading-3) {
+    @include text-sizing(18px, bold, 1.33);
+
+    @include breakpoint(desktop) {
+      @include text-sizing(28px, bold, 1.36);
+    }
+  }
+
+  @if ($type == heading-4) {
+    @include text-sizing(18px, bold, 1.33);
+
+    @include breakpoint(desktop) {
+      @include text-sizing(24px, bold, 1.42);
+    }
+  }
+
+  @if ($type == heading-5) {
+    @include text-sizing(18px, bold, 1.11);
+    // Mobile not included in mocks
+  }
+
+  @if ($type == heading-6) {
+    @include text-sizing(14px, bold, 1.43);
+
+    @include breakpoint(desktop) {
+      @include text-sizing(16px, bold, 1.5);
+    }
+  }
+
+  @if ($type == heading-7) {
+    @include text-sizing(14px, bold);
+    // Mobile not included in mocks
+  }
+
+  @if ($type == title-1) {
+    @include text-sizing(56px, 500, 1, -0.5px);
+
+    @include breakpoint(desktop) {
+      @include text-sizing(150px, 500, 1, -1.5px);
+    }
+  }
+
+  @if ($type == title-2) {
+    @include text-sizing(44px, 500, 1, -0.7px);
+
+    @include breakpoint(desktop) {
+      @include text-sizing(120px, 500, 1, -1px);
+    }
+  }
+
+  @if ($type == title-3) {
+    @include text-sizing(32px, 500, 1, -0.5px);
+
+    @include breakpoint(desktop) {
+      @include text-sizing(100px, 500, 1, -1px);
+    }
+  }
+
+  @if ($type == title-4) {
+    @include text-sizing(72px, 500, 1, -1px);
+    // Mobile not included in mocks
+  }
+
+  @if ($type == body) {
+    @include text-sizing(14px, normal, 1.43);
+
+    @include breakpoint(desktop) {
+      @include text-sizing(18px, normal, 1.56);
+    }
+  }
+
+  @if ($type == body-small) {
+    @include text-sizing(14px, normal, 1.71);
+    // Mobile not included in mocks
+  }
+
+  @if ($type == credit) {
+    @include text-sizing(14px, bold, 1.43);
+
+    @include breakpoint(desktop) {
+      @include text-sizing(18px, bold, 1.56);
+    }
+  }
+
+  @if ($type == credit-small) {
+    @include text-sizing(14px, bold, 1);
+    // Mobile not included in mocks
+  }
+
+  @if ($type == time) {
+    @include text-sizing(14px, 300, 1.43);
+
+    @include breakpoint(desktop) {
+      @include text-sizing(18px, 300, 1.56);
+    }
+  }
+
+  @if ($type == time-small) {
+    @include text-sizing(14px, 300);
+    // Mobile not included in mocks
+  }
+
+  @if ($type == cta) {
+    text-transform: uppercase;
+    @include text-sizing(14px, bold, 1, 0.5px);
+    // Desktop is the same
+  }
+
+  @if ($type == eyebrow) {
+    text-transform: uppercase;
+    @include text-sizing(13px, normal, 1.08, 1px);
+    // Desktop is the same
+  }
+
+  @if ($type == breaker) {
+    @include text-sizing(36px, bold, 1.22);
+
+    @include breakpoint(desktop) {
+      @include text-sizing(72px, bold);
+    }
+  }
+
+  @if ($type == subhead) {
+    text-transform: uppercase;
+    @include text-sizing(14px, bold, 1.43);
+
+    @include breakpoint(desktop) {
+      @include text-sizing(18px, bold, 1.56);
+    }
+  }
+
+  @if ($type == deck) {
+    @include text-sizing(18px, bold, 1.33);
+
+    @include breakpoint(desktop) {
+      @include text-sizing(24px, 600, 1.42);
+    }
+  }
+
+  @if ($type == pull-quote) {
+    text-transform: uppercase;
+    @include text-sizing(22px, bold, 1.27);
+
+    @include breakpoint(desktop) {
+      @include text-sizing(32px, bold, 1.31);
+    }
+  }
+
+  @if ($type == annotation) {
+    @include text-sizing(14px, 300, 1.57);
+    // Mobile not included in mocks
+  }
+}

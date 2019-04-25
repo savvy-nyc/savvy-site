@@ -1,0 +1,6 @@
+.global-footer {
+  background-color: #000;
+  @include breakpoint(desktop) {
+    height: $desktopFooterHeight;
+  }
+}

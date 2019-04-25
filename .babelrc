@@ -1,0 +1,23 @@
+{
+  "plugins": [],
+  "presets": [
+    [
+      "next/babel",
+      {
+        "preset-env": {
+          "loose": true,
+          "modules": false,
+          "targets": {
+            "chrome": "69",
+            "safari": "11",
+            "edge": "43",
+            "ie": "11"
+          },
+          "useBuiltIns": "usage"
+        }
+      }
+    ]
+  ],
+  "comments": true,
+  "sourceType": "unambiguous"
+}

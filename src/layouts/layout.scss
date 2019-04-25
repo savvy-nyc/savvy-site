@@ -1,0 +1,65 @@
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: none;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: $base-font-family;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  * {
+    box-sizing: border-box;
+  }
+}
+
+a {
+  color: inherit;
+}
+
+.val-positive {
+  color: $bright-lime;
+}
+
+.val-negative {
+  color: $red;
+}
+
+li {
+  list-style: none;
+}
+
+button {
+  background: none;
+  outline: none;
+  cursor: pointer;
+}
+
+address {
+  font-style: normal;
+}
+
+html {
+  @include borderBox();
+}
+
+body {
+  @include thin();
+  background-color: #000;
+  font-weight: 400;
+
+  &.no-scroll {
+    overflow-y: hidden;
+  }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow: hidden;
+}
